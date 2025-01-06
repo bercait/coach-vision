@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.bercait</groupId>
     <artifactId>coach-vision</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.main.class>com.github.bercait.coachvision.CoachVision</maven.compiler.main.class>

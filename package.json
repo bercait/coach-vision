@@ -2,16 +2,16 @@
   "bin": {
     "coach-vision": "jdeploy-bundle/jdeploy.js"
   },
-  "author": "",
-  "description": "Parent for JavaFX starter project",
+  "author": "beManos",
+  "description": "Data Visualisation for sport team games",
   "main": "index.js",
   "preferGlobal": true,
-  "repository": "",
-  "version": "1.0.0",
+  "repository": "https://github.com/bercait/coach-vision",
+  "version": "0.1.0",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "21",
-    "jar": "target/coach-vision-1.0.0.jar",
+    "jar": "target/coach-vision-0.1.0.jar",
     "javafx": true,
     "title": "Coach Vision"
   },
@@ -20,7 +20,7 @@
     "shelljs": "^0.8.4"
   },
   "license": "ISC",
-  "name": "sample2",
+  "name": "coachvision",
   "files": [
     "jdeploy-bundle"
   ],
