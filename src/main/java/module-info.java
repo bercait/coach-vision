@@ -1,4 +1,5 @@
 module pt.bemanos.sports.coachvision {
-    requires javafx.controls;
+    requires atlantafx.base;
+
     exports pt.bemanos.sports.coachvision;
 }
