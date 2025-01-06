@@ -15,6 +15,10 @@ import javafx.stage.Stage;
  */
 public class ApplicationFX extends Application {
 
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
@@ -30,10 +34,6 @@ public class ApplicationFX extends Application {
         var scene = new Scene(new StackPane(label), 640, 480, false, antialiasing);
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 
     @Override
