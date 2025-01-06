@@ -1,4 +1,4 @@
-module com.github.bercait.coachvision {
+module pt.bemanos.sports.coachvision {
     requires javafx.controls;
-    exports com.github.bercait.coachvision;
+    exports pt.bemanos.sports.coachvision;
 }

@@ -1,4 +1,4 @@
-package com.github.bercait.coachvision;
+package pt.bemanos.sports.coachvision;
 
 public class SystemInfo {
 

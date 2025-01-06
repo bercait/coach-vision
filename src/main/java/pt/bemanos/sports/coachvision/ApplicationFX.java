@@ -1,4 +1,4 @@
-package com.github.bercait.coachvision;
+package pt.bemanos.sports.coachvision;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 /**
  * JavaFX App
  */
-public class CoachVision extends Application {
+public class ApplicationFX extends Application {
 
     @Override
     public void start(Stage stage) {
