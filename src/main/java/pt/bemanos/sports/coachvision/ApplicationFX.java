@@ -9,9 +9,9 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.neo4j.ogm.session.Session;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
 import pt.bemanos.sports.coachvision.database.ServerFactory;
+import pt.bemanos.sports.coachvision.database.repositories.PlayerRepository;
 import pt.bemanos.sports.coachvision.domain.Player;
 
 /**
@@ -19,7 +19,7 @@ import pt.bemanos.sports.coachvision.domain.Player;
  */
 public class ApplicationFX extends Application {
 
-
+    PlayerRepository playerRepository = new PlayerRepository();
 
     public static void main(String[] args) {
         launch();
@@ -38,8 +38,7 @@ public class ApplicationFX extends Application {
 
         Player player = new Player();
         player.setName("Player Test");
-        Session session = DatabaseFactory.getInstance().getSession();
-        session.save(player);
+        playerRepository.save(player);
     }
 
     @Override
@@ -50,8 +49,7 @@ public class ApplicationFX extends Application {
                 ? SceneAntialiasing.BALANCED
                 : SceneAntialiasing.DISABLED;
 
-        Session session = DatabaseFactory.getInstance().getSession();
-        Player player = session.loadAll(Player.class).stream().findFirst().get();
+        Player player = playerRepository.findAll().stream().findFirst().get();
 
         var label = new Label("Hello, " + player.getName() + ", with id " + player.getId() + ".");
         var scene = new Scene(new StackPane(label), 640, 480, false, antialiasing);
