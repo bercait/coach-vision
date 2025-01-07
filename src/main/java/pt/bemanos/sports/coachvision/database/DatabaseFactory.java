@@ -5,10 +5,16 @@ import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 
 public class DatabaseFactory {
-    private static final Configuration CONFIGURATION = new Configuration.Builder().uri("bolt://localhost:7687").build();
-    private static final SessionFactory SESSION_FACTORY = new SessionFactory(CONFIGURATION, "pt.bemanos.sports.coachvision.domain");
+    private static final Configuration CONFIGURATION = new Configuration.Builder()
+            .uri("bolt://localhost:7687")
+            .useNativeTypes()
+            .build();
+
+    private static final SessionFactory SESSION_FACTORY = new SessionFactory(
+            CONFIGURATION,
+            "pt.bemanos.sports.coachvision.domain");
+
     private static final DatabaseFactory DATABASE_FACTORY = new DatabaseFactory();
-    private static Session SESSION;
 
     private DatabaseFactory() {
     }
@@ -22,10 +28,6 @@ public class DatabaseFactory {
     }
 
     public Session getSession() {
-        if (SESSION == null) {
-            SESSION = SESSION_FACTORY.openSession();
-        }
-
-        return SESSION;
+        return SESSION_FACTORY.openSession();
     }
 }
