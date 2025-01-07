@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class ServerFactory {
     private static final DatabaseManagementService MANAGEMENT_SERVICE = new DatabaseManagementServiceBuilder(
-            Path.of("target", "db", "neo4j"))
+            Path.of(System.getProperty("user.home"), ".coachvision", "db", "neo4j"))
             .setConfig(BoltConnector.enabled, true)
             .setConfig(BoltConnector.listen_address, new SocketAddress("localhost", 7687))
             .build();
