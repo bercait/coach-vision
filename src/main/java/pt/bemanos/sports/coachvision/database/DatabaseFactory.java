@@ -1,34 +1,31 @@
 package pt.bemanos.sports.coachvision.database;
 
-import org.neo4j.configuration.connectors.BoltConnector;
-import org.neo4j.configuration.helpers.SocketAddress;
-import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
-import org.neo4j.graphdb.GraphDatabaseService;
-
-import java.nio.file.Path;
+import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.SessionFactory;
 
 public class DatabaseFactory {
-    private static final DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(
-            Path.of("target", "db", "neo4j"))
-            .setConfig(BoltConnector.enabled, true)
-            .setConfig(BoltConnector.listen_address, new SocketAddress("localhost", 7687))
-            .build();
-    private static final GraphDatabaseService graphDB = managementService.database("neo4j");
-    private static final DatabaseFactory databaseFactory = new DatabaseFactory();
+    private static final Configuration CONFIGURATION = new Configuration.Builder().uri("bolt://localhost:7687").build();
+    private static final SessionFactory SESSION_FACTORY = new SessionFactory(CONFIGURATION, "pt.bemanos.sports.coachvision.domain");
+    private static final DatabaseFactory DATABASE_FACTORY = new DatabaseFactory();
+    private static Session SESSION;
 
     private DatabaseFactory() {
     }
 
     public static DatabaseFactory getInstance() {
-        return databaseFactory;
+        return DATABASE_FACTORY;
     }
 
-    public GraphDatabaseService getGraphDatabase() {
-        return graphDB;
+    public SessionFactory getSessionFactory() {
+        return SESSION_FACTORY;
     }
 
-    public DatabaseManagementService getManagementService() {
-        return managementService;
+    public Session getSession() {
+        if (SESSION == null) {
+            SESSION = SESSION_FACTORY.openSession();
+        }
+
+        return SESSION;
     }
 }

@@ -9,10 +9,9 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.session.Session;
-import org.neo4j.ogm.session.SessionFactory;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
+import pt.bemanos.sports.coachvision.database.ServerFactory;
 import pt.bemanos.sports.coachvision.domain.Player;
 
 /**
@@ -20,10 +19,7 @@ import pt.bemanos.sports.coachvision.domain.Player;
  */
 public class ApplicationFX extends Application {
 
-    Configuration config = new Configuration.Builder()
-            .uri("bolt://localhost:7687")
-            .build();
-    SessionFactory sessionFactory = new SessionFactory(config, "pt.bemanos.sports.coachvision.domain");
+
 
     public static void main(String[] args) {
         launch();
@@ -32,14 +28,17 @@ public class ApplicationFX extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        System.out.println("Connected to database: " + DatabaseFactory.getInstance().getGraphDatabase().databaseName());
+        System.out.println("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
         // Registers a shutdown hook for the Neo4j instance so that it shuts down nicely when the VM exits
         // (even if you "Ctrl-C" the running application).
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> DatabaseFactory.getInstance().getManagementService().shutdown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            DatabaseFactory.getInstance().getSessionFactory().close();
+            ServerFactory.getInstance().getManagementService().shutdown();
+        }));
 
         Player player = new Player();
         player.setName("Player Test");
-        Session session = sessionFactory.openSession();
+        Session session = DatabaseFactory.getInstance().getSession();
         session.save(player);
     }
 
@@ -51,24 +50,22 @@ public class ApplicationFX extends Application {
                 ? SceneAntialiasing.BALANCED
                 : SceneAntialiasing.DISABLED;
 
-        Session session = sessionFactory.openSession();
+        Session session = DatabaseFactory.getInstance().getSession();
         Player player = session.loadAll(Player.class).stream().findFirst().get();
 
         var label = new Label("Hello, " + player.getName() + ", with id " + player.getId() + ".");
         var scene = new Scene(new StackPane(label), 640, 480, false, antialiasing);
         stage.setScene(scene);
         stage.show();
-
-        sessionFactory.close();
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
-        Platform.exit();
 
-        sessionFactory.close();
-        DatabaseFactory.getInstance().getManagementService().shutdown();
+        DatabaseFactory.getInstance().getSessionFactory().close();
+        ServerFactory.getInstance().getManagementService().shutdown();
+        Platform.exit();
     }
 
 }
