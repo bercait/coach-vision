@@ -12,7 +12,7 @@ public class ServerFactory {
     private static final DatabaseManagementService MANAGEMENT_SERVICE = new DatabaseManagementServiceBuilder(
             Path.of(System.getProperty("user.home"), ".coachvision", "db", "neo4j"))
             .setConfig(BoltConnector.enabled, true)
-            .setConfig(BoltConnector.listen_address, new SocketAddress("localhost", 7687))
+            .setConfig(BoltConnector.listen_address, new SocketAddress("localhost", 17687))
             .build();
     private static final GraphDatabaseService GRAPH_DB = MANAGEMENT_SERVICE.database("neo4j");
     private static final ServerFactory SERVER_FACTORY = new ServerFactory();

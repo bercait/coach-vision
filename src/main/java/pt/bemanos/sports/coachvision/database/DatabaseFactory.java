@@ -6,7 +6,7 @@ import org.neo4j.ogm.session.SessionFactory;
 
 public class DatabaseFactory {
     private static final Configuration CONFIGURATION = new Configuration.Builder()
-            .uri("bolt://localhost:7687")
+            .uri("bolt://localhost:17687")
             .useNativeTypes()
             .build();
 
