@@ -1,0 +1,54 @@
+package pt.bemanos.sports.coachvision.services;
+
+import org.neo4j.ogm.model.Result;
+import org.neo4j.ogm.session.Session;
+import pt.bemanos.sports.coachvision.database.DatabaseFactory;
+
+import java.util.*;
+
+public class DynamicTableService {
+
+    private String getQueryFromDynamicTable(String tableId) {
+        return "MATCH (g:Game)-[]-(p:Player)" +
+                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t) as throws}" +
+                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g) as goals}" +
+                "CALL (p) {MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s) as saves}" +
+                "RETURN p.name as name, goals, throws, saves";
+    }
+
+    protected List<String> getOrderOfColumnsFromQuery(String query) {
+        String[] returnSplit = query.split("RETURN");
+        String[] rawColumns = returnSplit[returnSplit.length - 1].split(",");
+
+        return Arrays.stream(rawColumns)
+                .map(value -> {
+                    if (value.contains(" as ")) {
+                        String[] split = value.split(" ");
+                        value = split[split.length - 1];
+                    }
+
+                    return value.trim();
+                }).toList();
+    }
+
+    public List<Map<String, String>> getDataFromDynamicTable(String tableId) {
+        String cypherQuery = this.getQueryFromDynamicTable(tableId);
+        List<String> columns = this.getOrderOfColumnsFromQuery(cypherQuery);
+        List<Map<String, String>> data = new ArrayList<>();
+
+        Session session = DatabaseFactory.getInstance().getSession();
+        Result result = session.query(cypherQuery, new HashMap<>());
+
+        result.forEach(map -> {
+            Map<String, String> values = new HashMap<>();
+            columns.forEach(column -> {
+                Object object = map.get(column);
+                String value = String.valueOf(object);
+                values.put(column, value);
+            });
+            data.add(values);
+        });
+
+        return data;
+    }
+}
