@@ -65,7 +65,7 @@ public class DynamicTableService {
         data.get(0).forEach((key, value) -> {
             TableColumn<Map<String, String>, String> column = new TableColumn<>(key);
             column.setCellValueFactory(map -> new SimpleStringProperty(map.getValue().get(key)));
-            tableView.getColumns().add(column);
+            tableView.getColumns().add(0, column);
         });
 
         ObservableList<Map<String, String>> observableList = FXCollections.observableList(data);
