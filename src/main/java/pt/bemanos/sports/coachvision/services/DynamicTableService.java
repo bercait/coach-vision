@@ -8,17 +8,37 @@ import javafx.scene.control.TableView;
 import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
+import pt.bemanos.sports.coachvision.database.repositories.DynamicTableRepository;
+import pt.bemanos.sports.coachvision.domain.DynamicTable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DynamicTableService {
 
+    private final DynamicTableRepository dynamicTableRepository = new DynamicTableRepository();
+
     private String getQueryFromDynamicTable(String tableId) {
-        return "MATCH (g:Game)-[]-(p:Player)" +
-                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t) as Throws}" +
-                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g) as Goals}" +
-                "CALL (p) {MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s) as Saves}" +
-                "RETURN p.name as Name, Goals, Throws, Saves";
+        DynamicTable dynamicTable = dynamicTableRepository.findById(tableId);
+
+        final AtomicReference<String> cypher = new AtomicReference<>(dynamicTable.getCypherMatch());
+        final AtomicReference<String> returnQuery = new AtomicReference<>(dynamicTable.getCypherReturn());
+
+        dynamicTable.getProperties().forEach((key, value) -> {
+            String query = cypher.get()
+                    .concat(dynamicTable.getCypherCall())
+                    .concat("{")
+                    .concat(value)
+                    .concat(" as ")
+                    .concat(key)
+                    .concat("}");
+            cypher.set(query);
+
+            returnQuery.set(returnQuery.get().concat(", ").concat(key));
+        });
+        cypher.set(cypher.get().concat(returnQuery.get()));
+
+        return cypher.get();
     }
 
     protected List<String> getOrderOfColumnsFromQuery(String query) {
