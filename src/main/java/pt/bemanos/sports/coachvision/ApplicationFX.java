@@ -4,22 +4,20 @@ import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
 import pt.bemanos.sports.coachvision.database.ServerFactory;
-import pt.bemanos.sports.coachvision.database.repositories.PlayerRepository;
-import pt.bemanos.sports.coachvision.domain.Player;
+
+import java.io.IOException;
 
 /**
  * JavaFX App
  */
 public class ApplicationFX extends Application {
-
-    PlayerRepository playerRepository = new PlayerRepository();
 
     public static void main(String[] args) {
         launch();
@@ -35,24 +33,20 @@ public class ApplicationFX extends Application {
             DatabaseFactory.getInstance().getSessionFactory().close();
             ServerFactory.getInstance().getManagementService().shutdown();
         }));
-
-        Player player = new Player();
-        player.setName("Player Test");
-        playerRepository.save(player);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
         var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
                 ? SceneAntialiasing.BALANCED
                 : SceneAntialiasing.DISABLED;
 
-        Player player = playerRepository.findAll().stream().findFirst().get();
+        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationFX.class.getResource("/fxml/player_total.fxml"));
+        Pane pane = fxmlLoader.load();
 
-        var label = new Label("Hello, " + player.getName() + ", with id " + player.getId() + ".");
-        var scene = new Scene(new StackPane(label), 640, 480, false, antialiasing);
+        var scene = new Scene(pane, 800, 600, false, antialiasing);
         stage.setScene(scene);
         stage.show();
     }
