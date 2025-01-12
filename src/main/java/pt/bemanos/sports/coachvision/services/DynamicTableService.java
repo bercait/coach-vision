@@ -1,5 +1,10 @@
 package pt.bemanos.sports.coachvision.services;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
@@ -50,5 +55,21 @@ public class DynamicTableService {
         });
 
         return data;
+    }
+
+
+    public TableView<Map<String, String>> createTableViewFromDynamicTable(String tableId) {
+        List<Map<String, String>> data = this.getDataFromDynamicTable(tableId);
+        TableView<Map<String, String>> tableView = new TableView<>();
+
+        data.get(0).forEach((key, value) -> {
+            TableColumn<Map<String, String>, String> column = new TableColumn<>(key);
+            column.setCellValueFactory(map -> new SimpleStringProperty(map.getValue().get(key)));
+            tableView.getColumns().add(column);
+        });
+
+        ObservableList<Map<String, String>> observableList = FXCollections.observableList(data);
+        tableView.setItems(observableList);
+        return tableView;
     }
 }
