@@ -10,10 +10,10 @@ public class DynamicTableService {
 
     private String getQueryFromDynamicTable(String tableId) {
         return "MATCH (g:Game)-[]-(p:Player)" +
-                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t) as throws}" +
-                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g) as goals}" +
-                "CALL (p) {MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s) as saves}" +
-                "RETURN p.name as name, goals, throws, saves";
+                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t) as Throws}" +
+                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g) as Goals}" +
+                "CALL (p) {MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s) as Saves}" +
+                "RETURN p.name as Name, Goals, Throws, Saves";
     }
 
     protected List<String> getOrderOfColumnsFromQuery(String query) {
