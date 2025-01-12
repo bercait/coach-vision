@@ -1,13 +1,46 @@
 package pt.bemanos.sports.coachvision.domain;
 
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
 @NodeEntity
 public class Attack {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @Relationship(type = "NEXT_ATTACK")
     private Attack nextAttack;
 
     @Relationship(type = "NEXT_EVENT")
     private Event nextEvent;
+
+    public Attack() {
+    }
+
+    public Attack getNextAttack() {
+        return nextAttack;
+    }
+
+    public void setNextAttack(Attack nextAttack) {
+        this.nextAttack = nextAttack;
+    }
+
+    public Event getNextEvent() {
+        return nextEvent;
+    }
+
+    public void setNextEvent(Event nextEvent) {
+        this.nextEvent = nextEvent;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
