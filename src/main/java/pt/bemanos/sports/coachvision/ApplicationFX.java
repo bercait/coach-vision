@@ -48,7 +48,11 @@ public class ApplicationFX extends Application {
 
         var scene = new Scene(pane, 800, 600, false, antialiasing);
         stage.setScene(scene);
-        stage.show();
+
+        Platform.runLater(() -> {
+            stage.show();
+            stage.requestFocus();
+        });
     }
 
     @Override
