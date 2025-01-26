@@ -19,6 +19,11 @@ public class Game {
     @Relationship(type = "AWAY_PLAYER")
     private List<Player> awayPlayers;
 
+    @Relationship(type = "HOME_TEAM")
+    private Team homeTeam;
+
+    @Relationship(type = "AWAY_TEAM")
+    private Team awayTeam;
 
     @Relationship(type = "NEXT_ATTACK")
     private Attack nextAttack;
@@ -56,5 +61,21 @@ public class Game {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Team getHomeTeam() {
+        return homeTeam;
+    }
+
+    public void setHomeTeam(Team homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
+    public Team getAwayTeam() {
+        return awayTeam;
+    }
+
+    public void setAwayTeam(Team awayTeam) {
+        this.awayTeam = awayTeam;
     }
 }
