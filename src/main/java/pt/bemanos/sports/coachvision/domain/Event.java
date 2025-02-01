@@ -32,4 +32,12 @@ public class Event {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", nextEvent=" + nextEvent +
+                '}';
+    }
 }

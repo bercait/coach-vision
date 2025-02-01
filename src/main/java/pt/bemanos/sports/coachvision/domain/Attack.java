@@ -43,4 +43,13 @@ public class Attack {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Attack{" +
+                "id=" + id +
+                ", nextAttack=" + nextAttack +
+                ", nextEvent=" + nextEvent +
+                '}';
+    }
 }

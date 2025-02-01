@@ -32,4 +32,12 @@ public class Save extends Event {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Save{" +
+                "id=" + id +
+                ", goalkeeper=" + goalkeeper +
+                '}';
+    }
 }

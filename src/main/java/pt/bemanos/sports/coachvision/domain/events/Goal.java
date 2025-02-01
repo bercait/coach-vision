@@ -31,4 +31,12 @@ public class Goal extends Event {
     public void setGoalkeeper(Player goalkeeper) {
         this.goalkeeper = goalkeeper;
     }
+
+    @Override
+    public String toString() {
+        return "Goal{" +
+                "id=" + id +
+                ", goalkeeper=" + goalkeeper +
+                '}';
+    }
 }

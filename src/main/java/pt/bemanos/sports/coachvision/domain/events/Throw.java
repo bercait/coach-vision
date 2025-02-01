@@ -32,4 +32,13 @@ public class Throw extends Event {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Throw{" +
+                "id=" + id +
+                ", actor=" + actor +
+                ", next=" + this.getNextEvent() +
+                '}';
+    }
 }

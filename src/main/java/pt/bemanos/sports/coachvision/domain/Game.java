@@ -78,4 +78,16 @@ public class Game {
     public void setAwayTeam(Team awayTeam) {
         this.awayTeam = awayTeam;
     }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", homePlayers=" + homePlayers +
+                ", awayPlayers=" + awayPlayers +
+                ", homeTeam=" + homeTeam +
+                ", awayTeam=" + awayTeam +
+                ", nextAttack=" + nextAttack +
+                '}';
+    }
 }
