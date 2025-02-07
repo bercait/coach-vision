@@ -48,8 +48,8 @@ public class Attack {
     public String toString() {
         return "Attack{" +
                 "id=" + id +
-                ", nextAttack=" + nextAttack +
                 ", nextEvent=" + nextEvent +
+                ", nextAttack=" + nextAttack +
                 '}';
     }
 }
