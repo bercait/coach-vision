@@ -12,11 +12,11 @@ class DynamicTableServiceTest {
 
     @Test
     void getOrderOfColumnsFromQuery() {
-        String query = "MATCH (g:Game)-[]-(p:Player)" +
+        String query = "MATCH (g:Game)-[:NEXT_ATTACK]-+(a:Attack)-[:NEXT_EVENT]-+(e:Event)-[]-(p:Player)-[]-(g)-[]-(t:Team)" +
                 "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t) as Throws}" +
                 "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g) as Goals}" +
-                "CALL (p) {MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s) as Saves}" +
-                "RETURN p.name as Name, Goals, Throws, Saves";
+                "CALL (p) {MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(s:Save) RETURN count(s) as Saves}" +
+                "RETURN DISTINCT p.name as Name, Goals, Throws, Saves";
 
         List<String> columns = this.dynamicTableService.getOrderOfColumnsFromQuery(query);
 
