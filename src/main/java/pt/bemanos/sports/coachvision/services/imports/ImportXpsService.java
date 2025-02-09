@@ -33,12 +33,7 @@ public class ImportXpsService {
     public Map<String, List<String>> getTeams() {
         Map<String, List<String>> map = new HashMap<>();
 
-        List<String> games = csvRecords.parallelStream()
-                .map(record -> record.get(0))
-                .distinct()
-                .toList();
-
-        games.forEach(game -> {
+        getMatches().forEach(game -> {
             List<String> teams = csvRecords.parallelStream()
                     .filter(record -> record.get(0).equalsIgnoreCase(game))
                     .map(record -> record.get(5))
@@ -51,7 +46,15 @@ public class ImportXpsService {
         return map;
     }
 
-    public List<String> getPlayersOfTeam(String gameId, String team) {
+    public List<String> getTeams(String matchId) {
+        return csvRecords.parallelStream()
+                .filter(record -> record.get(0).equalsIgnoreCase(matchId))
+                .map(record -> record.get(5))
+                .distinct()
+                .toList();
+    }
+
+    public List<Player> getPlayersOfTeam(String gameId, String team) {
         List<Integer> teamPlayersId = List.of(6, 14, 28);
         List<Integer> oppositePlayersId = List.of(15, 16, 17, 19, 27);
 
