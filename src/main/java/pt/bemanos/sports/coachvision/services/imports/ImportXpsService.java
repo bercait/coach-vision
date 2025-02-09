@@ -9,6 +9,7 @@ import pt.bemanos.sports.coachvision.database.repositories.GameRepository;
 import pt.bemanos.sports.coachvision.database.repositories.PlayerRepository;
 import pt.bemanos.sports.coachvision.database.repositories.TeamRepository;
 import pt.bemanos.sports.coachvision.domain.*;
+import pt.bemanos.sports.coachvision.domain.events.Assist;
 import pt.bemanos.sports.coachvision.domain.events.Goal;
 import pt.bemanos.sports.coachvision.domain.events.Save;
 import pt.bemanos.sports.coachvision.domain.events.Throw;
@@ -41,24 +42,30 @@ public class ImportXpsService {
         JexlBuilder.setDefaultPermissions(JexlPermissions.UNRESTRICTED);
         JexlEngine jexl = new JexlBuilder().create();
 
+        rules.add(jexl.createExpression("!line.get(14).equalsIgnoreCase('" + nullable + "')"));
         rules.add(jexl.createExpression("line.get(18).contains('Golo') || line.get(18).contains('[Falhado]/')"));
         rules.add(jexl.createExpression("line.get(18).contains('Golo')"));
         rules.add(jexl.createExpression("line.get(18).contains('[Falhado]/[Defesa]')"));
 
         values.add(jexl.createScript("""
-                    player = playerRepository.findOrCreate(team.getName(), line.get(6));
-                    shoot.setActor(player);
-                    return shoot;
+                player = playerRepository.findOrCreate(team.getName(), line.get(14));
+                assist.setActor(player);
+                return assist;
                 """));
         values.add(jexl.createScript("""
-                    goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
-                    goal.setGoalkeeper(goalkeeper);
-                    return goal;
+                player = playerRepository.findOrCreate(team.getName(), line.get(6));
+                shoot.setActor(player);
+                return shoot;
                 """));
         values.add(jexl.createScript("""
-                    goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
-                    save.setGoalkeeper(goalkeeper);
-                    return save;
+                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
+                goal.setGoalkeeper(goalkeeper);
+                return goal;
+                """));
+        values.add(jexl.createScript("""
+                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
+                save.setGoalkeeper(goalkeeper);
+                return save;
                 """));
     }
 
@@ -161,6 +168,7 @@ public class ImportXpsService {
                 context1.set("shoot", new Throw());
                 context1.set("goal", new Goal());
                 context1.set("save", new Save());
+                context1.set("assist", new Assist());
                 context1.set("playerRepository", playerRepository);
                 context1.set("line", line);
 
