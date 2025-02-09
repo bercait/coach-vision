@@ -51,13 +51,13 @@ public class DynamicTableService {
                 }).toList();
     }
 
-    public List<Map<String, String>> getDataFromDynamicTable(String tableId) {
+    public List<Map<String, String>> getDataFromDynamicTable(String tableId, Map<String, ?> parameters) {
         String cypherQuery = this.getQueryFromDynamicTable(tableId);
         List<String> columns = this.getOrderOfColumnsFromQuery(cypherQuery);
         List<Map<String, String>> data = new ArrayList<>();
 
         Session session = DatabaseFactory.getInstance().getSession();
-        Result result = session.query(cypherQuery, new HashMap<>());
+        Result result = session.query(cypherQuery, parameters);
 
         result.forEach(map -> {
             Map<String, String> values = new HashMap<>();

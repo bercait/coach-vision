@@ -13,6 +13,7 @@ import pt.bemanos.sports.coachvision.services.DynamicTableService;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -41,7 +42,9 @@ public class PlayerTotalController implements Initializable {
     }
 
     private TableView<Map<String, String>> createTableViewFromDynamicTable() {
-        List<Map<String, String>> data = dynamicTableService.getDataFromDynamicTable("player_total");
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("teamName", "CJAG SENIORES");
+        List<Map<String, String>> data = dynamicTableService.getDataFromDynamicTable("player_total", parameters);
         TableView<Map<String, String>> tableView = new TableView<>();
 
         data.get(0).forEach((key, value) -> {
