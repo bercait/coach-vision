@@ -5,6 +5,10 @@ import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.internal.kernel.api.exceptions.ProcedureException;
+import org.neo4j.kernel.api.procedure.GlobalProcedures;
+import org.neo4j.kernel.internal.GraphDatabaseAPI;
+import pt.bemanos.sports.coachvision.database.procedure.Utils;
 
 import java.nio.file.Path;
 
@@ -18,6 +22,11 @@ public class ServerFactory {
     private static final ServerFactory SERVER_FACTORY = new ServerFactory();
 
     private ServerFactory() {
+        try {
+            ((GraphDatabaseAPI) GRAPH_DB).getDependencyResolver().resolveDependency(GlobalProcedures.class).registerFunction(Utils.class);
+        } catch (ProcedureException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static ServerFactory getInstance() {
