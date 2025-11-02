@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class ImportXpsService {
 
@@ -173,7 +174,7 @@ public class ImportXpsService {
             csvRecords.forEach(line -> {
                 Event previousEvent = null;
                 Attack attack = new Attack();
-                JexlContext context1 = new ImportXpsServiceOld.StreamContext();
+                JexlContext context1 = new StreamContext();
                 context1.set("team", (line.get(5).equalsIgnoreCase(home.getName())) ? home : away);
                 context1.set("opponent", (line.get(5).equalsIgnoreCase(home.getName())) ? away : home);
                 context1.set("player", new Player());
@@ -229,6 +230,33 @@ public class ImportXpsService {
                              .build()
              )) {
             return parser.getRecords();
+        }
+    }
+
+    /**
+     * A MapContext that can operate on streams and collections.
+     */
+    public static class StreamContext extends MapContext {
+        /**
+         * This allows using a JEXL lambda as a filter.
+         *
+         * @param stream the stream
+         * @param filter the lambda to use as filter
+         * @return the filtered stream
+         */
+        public Stream<?> filter(final Stream<?> stream, final JexlScript filter) {
+            return stream.filter(x -> x != null && Boolean.TRUE.equals(filter.execute(this, x)));
+        }
+
+        /**
+         * This allows using a JEXL lambda as a mapper.
+         *
+         * @param stream the stream
+         * @param mapper the lambda to use as mapper
+         * @return the mapped stream
+         */
+        public Stream<?> map(final Stream<?> stream, final JexlScript mapper) {
+            return stream.map(x -> mapper.execute(this, x));
         }
     }
 }
