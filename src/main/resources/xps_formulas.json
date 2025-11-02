@@ -1,0 +1,35 @@
+[
+  {
+    "id": "luis_santos_live",
+    "sport": "handball",
+    "file_type": "csv",
+    "events": [
+      {
+        "name": "Shoot",
+        "trigger": "line.get('Desfecho').equals('Golo') || line.get('Desfecho').contains('[Falhado]')",
+        "attributes": {
+          "actor": "line.get('Atleta')",
+          "zone": "convert_zone(line.get('Zona de Remate))",
+          "phase": "convert_phase(line.get('Fase Ataque'))"
+        }
+      },
+      {
+        "name": "Goal",
+        "trigger": "line.get('Desfecho').equals('Golo')",
+        "attributes": {
+          "actor": "line.get('GR Adversário')"
+        }
+      }
+    ],
+    "methods": [
+      {
+        "type": "switch",
+        "name": "convert_phase",
+        "values": {
+          "organized": "Organizado",
+          "fast_beak": "C.A."
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import atlantafx.base.controls.Spacer?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" prefHeight="300.0" prefWidth="600.0"
+      xmlns="http://javafx.com/javafx/21"
+      fx:controller="pt.bemanos.sports.coachvision.controller.RequestLicenseController">
+    <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
+        <VBox.margin>
+            <Insets left="25.0" right="25.0" top="25.0"/>
+        </VBox.margin>
+        <Label text="The license of the application is not valid.&#13;The license key can be bought, filling up the form:"
+               wrapText="true">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+    </HBox>
+    <Hyperlink alignment="CENTER" contentDisplay="CENTER" onAction="#openBrowser"
+               text="https://forms.gle/RZKnvSKoCF9imjZM7">
+        <VBox.margin>
+            <Insets left="125.0"/>
+        </VBox.margin>
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Hyperlink>
+    <Spacer VBox.vgrow="ALWAYS"/>
+    <Label text="This application will only work with the follwing XPS formula (for now):" wrapText="true">
+        <font>
+            <Font size="18.0"/>
+        </font>
+        <VBox.margin>
+            <Insets left="25.0"/>
+        </VBox.margin>
+    </Label>
+    <ImageView fitHeight="300.0" fitWidth="750.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets bottom="25.0" left="25.0"/>
+        </VBox.margin>
+        <Image url="@../formula.jpg"/>
+    </ImageView>
+    <Label text="Machine ID (Copy this value)" wrapText="true">
+        <font>
+            <Font size="18.0"/>
+        </font>
+        <VBox.margin>
+            <Insets left="25.0"/>
+        </VBox.margin>
+    </Label>
+    <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
+        <VBox.margin>
+            <Insets left="25.0" right="25.0"/>
+        </VBox.margin>
+        <TextField fx:id="machineId" prefWidth="550.0" editable="false">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </TextField>
+    </HBox>
+    <HBox alignment="BOTTOM_RIGHT" spacing="50.0">
+        <VBox.margin>
+            <Insets bottom="25.0" right="25.0" top="50.0"/>
+        </VBox.margin>
+        <Button cancelButton="true" minWidth="75.0" mnemonicParsing="false" onAction="#closeWindow" text="Close"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="800.0" prefWidth="1024.0"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="pt.bemanos.sports.coachvision.controller.ReportMatchController"
+            fx:id="reportPane">
+
+    <HBox alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" prefHeight="50.0" spacing="16.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+        </padding>
+        <Button mnemonicParsing="false" onAction="#loadFile" text="Import file ..."/>
+        <Label fx:id="fileNameLabel" minWidth="300.0"/>
+        <ChoiceBox fx:id="teamsSelect" disable="true" minWidth="100.0" prefWidth="350.0"/>
+    </HBox>
+    <Separator AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0"/>
+    <!--   <TableView fx:id="playersTotal" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="65.0" />-->
+    <TableView fx:id="goalkeeperTotals" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="665.0"/>
+
+</AnchorPane>

@@ -42,28 +42,31 @@ public class ImportXpsService {
         JexlBuilder.setDefaultPermissions(JexlPermissions.UNRESTRICTED);
         JexlEngine jexl = new JexlBuilder().create();
 
-        rules.add(jexl.createExpression("!line.get(14).equalsIgnoreCase('" + nullable + "')"));
-        rules.add(jexl.createExpression("line.get(18).contains('Golo') || line.get(18).contains('[Falhado]/')"));
-        rules.add(jexl.createExpression("line.get(18).contains('Golo')"));
-        rules.add(jexl.createExpression("line.get(18).contains('[Falhado]/[Defesa]')"));
+        //Assist
+//        rules.add(jexl.createExpression("!line.get(14).equalsIgnoreCase('" + nullable + "')"));
+        //Shoot
+        rules.add(jexl.createExpression("line.get(8).contains('Golo') || line.get(8).contains('[Falhado]/')"));
+        rules.add(jexl.createExpression("line.get(8).contains('Golo')"));
+        rules.add(jexl.createExpression("line.get(8).contains('[Falhado]/[Defesa]')"));
 
-        values.add(jexl.createScript("""
-                player = playerRepository.findOrCreate(team.getName(), line.get(14));
-                assist.setActor(player);
-                return assist;
-                """));
+//        values.add(jexl.createScript("""
+//                player = playerRepository.findOrCreate(team.getName(), line.get(14));
+//                assist.setActor(player);
+//                assist.getLabels().add('Teste');
+//                return assist;
+//                """));
         values.add(jexl.createScript("""
                 player = playerRepository.findOrCreate(team.getName(), line.get(6));
                 shoot.setActor(player);
                 return shoot;
                 """));
         values.add(jexl.createScript("""
-                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
+                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(10));
                 goal.setGoalkeeper(goalkeeper);
                 return goal;
                 """));
         values.add(jexl.createScript("""
-                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(27));
+                goalkeeper = playerRepository.findOrCreate(opponent.getName(), line.get(10));
                 save.setGoalkeeper(goalkeeper);
                 return save;
                 """));
@@ -76,33 +79,42 @@ public class ImportXpsService {
                 .toList();
     }
 
+    public List<String> getAllTeams() {
+        return csvRecords.parallelStream()
+                .map(record -> record.get(5))
+                .distinct()
+                .toList();
+    }
+
     public Map<String, List<String>> getTeams() {
         Map<String, List<String>> map = new HashMap<>();
 
-        getMatches().forEach(game -> {
+        getMatches().forEach(gameId -> {
             List<String> teams = csvRecords.parallelStream()
-                    .filter(record -> record.get(0).equalsIgnoreCase(game))
+                    .filter(record -> record.get(0).equalsIgnoreCase(gameId))
                     .map(record -> record.get(5))
                     .distinct()
                     .toList();
 
-            map.put(game, teams);
+            map.put(gameId, teams);
         });
 
         return map;
     }
 
-    public List<String> getTeams(String matchId) {
+    public List<String> getTeams(String gameId) {
         return csvRecords.parallelStream()
-                .filter(record -> record.get(0).equalsIgnoreCase(matchId))
+                .filter(record -> record.get(0).equalsIgnoreCase(gameId))
                 .map(record -> record.get(5))
                 .distinct()
                 .toList();
     }
 
     public List<Player> getPlayersOfTeam(String gameId, String team) {
-        List<Integer> teamPlayersId = List.of(6, 14, 28);
-        List<Integer> oppositePlayersId = List.of(15, 16, 17, 19, 27);
+//        List<Integer> teamPlayersId = List.of(6, 14, 28);
+        List<Integer> teamPlayersId = List.of(6);
+//        List<Integer> oppositePlayersId = List.of(15, 16, 17, 19, 27);
+        List<Integer> oppositePlayersId = List.of(10);
 
         List<String> players = new ArrayList<>();
         List<CSVRecord> teamRecords = csvRecords.parallelStream()
@@ -146,7 +158,8 @@ public class ImportXpsService {
 
             List<String> teams = getTeams(matchId);
             Team home = teamRepository.findOrCreate(teams.get(0));
-            Team away = teamRepository.findOrCreate(teams.get(1));
+            String teamName = (teams.size() > 1) ? teams.get(1) : "";
+            Team away = teamRepository.findOrCreate(teamName);
 
             game.setHomeTeam(home);
             game.setAwayTeam(away);
@@ -175,6 +188,10 @@ public class ImportXpsService {
                 for (int i = 0; i < rules.size(); i++) {
                     if ((boolean) rules.get(i).evaluate(context1)) {
                         Event event = (Event) values.get(i).execute(context1);
+
+                        if (event instanceof Assist) {
+                            System.out.println(event);
+                        }
 
                         if (previousEvent != null) {
                             previousEvent.setNextEvent(event);

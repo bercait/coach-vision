@@ -6,7 +6,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import pt.bemanos.sports.coachvision.domain.Event;
 import pt.bemanos.sports.coachvision.domain.Player;
 
-public class Assist extends Event {
+public class Turnover extends Event {
     @Id
     @GeneratedValue
     private Long id;
@@ -14,15 +14,7 @@ public class Assist extends Event {
     @Relationship(type = "ACTOR")
     private Player actor;
 
-    public Assist() {
-    }
-
-    public Player getActor() {
-        return actor;
-    }
-
-    public void setActor(Player actor) {
-        this.actor = actor;
+    public Turnover() {
     }
 
     @Override
@@ -35,13 +27,19 @@ public class Assist extends Event {
         this.id = id;
     }
 
+    public Player getActor() {
+        return actor;
+    }
+
+    public void setActor(Player actor) {
+        this.actor = actor;
+    }
 
     @Override
     public String toString() {
-        return "Assist{" +
+        return "Turnover{" +
                 "id=" + id +
                 ", actor=" + actor +
-                ", labels=" + getLabels() +
                 '}';
     }
 }

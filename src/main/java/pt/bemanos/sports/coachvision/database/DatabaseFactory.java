@@ -7,6 +7,9 @@ import org.neo4j.ogm.session.SessionFactory;
 public class DatabaseFactory {
     private static final Configuration CONFIGURATION = new Configuration.Builder()
             .uri("bolt://localhost:17687")
+//            .uri("bolt://localhost:7687")
+            .database("neo4j")
+//            .credentials("neo4j", "12345678")
             .useNativeTypes()
             .build();
 
@@ -17,6 +20,11 @@ public class DatabaseFactory {
     private static final DatabaseFactory DATABASE_FACTORY = new DatabaseFactory();
 
     private DatabaseFactory() {
+//        getSession().deleteAll(Event.class);
+//        getSession().deleteAll(Game.class);
+//        getSession().deleteAll(Player.class);
+//        getSession().deleteAll(Team.class);
+//        getSession().deleteAll(Attack.class);
     }
 
     public static DatabaseFactory getInstance() {

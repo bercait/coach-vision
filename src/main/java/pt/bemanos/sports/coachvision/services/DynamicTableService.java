@@ -17,7 +17,6 @@ public class DynamicTableService {
         DynamicTable dynamicTable = dynamicTableRepository.findById(tableId);
 
         final AtomicReference<String> cypher = new AtomicReference<>(dynamicTable.getCypherMatch());
-        final AtomicReference<String> returnQuery = new AtomicReference<>(dynamicTable.getCypherReturn());
 
         dynamicTable.getProperties().forEach((key, value) -> {
             String query = cypher.get()
@@ -29,21 +28,21 @@ public class DynamicTableService {
                     .concat("}");
             cypher.set(query);
 
-            returnQuery.set(returnQuery.get().concat(", ").concat(key));
         });
-        cypher.set(cypher.get().concat(returnQuery.get()));
+        cypher.set(cypher.get().concat(dynamicTable.getCypherReturn()));
 
         return cypher.get();
     }
 
     protected List<String> getOrderOfColumnsFromQuery(String query) {
         String[] returnSplit = query.split("RETURN");
-        String[] rawColumns = returnSplit[returnSplit.length - 1].split(",");
+        String[] rawColumns = returnSplit[returnSplit.length - 1].split(",\n");
+        final String splitter = " AS ";
 
         return Arrays.stream(rawColumns)
                 .map(value -> {
-                    if (value.contains(" as ")) {
-                        String[] split = value.split(" ");
+                    if (value.contains(splitter)) {
+                        String[] split = value.split(splitter);
                         value = split[split.length - 1];
                     }
 
@@ -51,20 +50,20 @@ public class DynamicTableService {
                 }).toList();
     }
 
-    public List<Map<String, String>> getDataFromDynamicTable(String tableId, Map<String, ?> parameters) {
+    public List<Map<String, Object>> getDataFromDynamicTable(String tableId, Map<String, ?> parameters) {
         String cypherQuery = this.getQueryFromDynamicTable(tableId);
         List<String> columns = this.getOrderOfColumnsFromQuery(cypherQuery);
-        List<Map<String, String>> data = new ArrayList<>();
+        List<Map<String, Object>> data = new ArrayList<>();
 
         Session session = DatabaseFactory.getInstance().getSession();
         Result result = session.query(cypherQuery, parameters);
 
         result.forEach(map -> {
-            Map<String, String> values = new HashMap<>();
+            Map<String, Object> values = new HashMap<>();
             columns.forEach(column -> {
                 Object object = map.get(column);
                 String value = String.valueOf(object);
-                values.put(column, value);
+                values.put(column, object);
             });
             data.add(values);
         });
