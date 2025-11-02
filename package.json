@@ -7,11 +7,11 @@
   "main": "index.js",
   "preferGlobal": true,
   "repository": "https://github.com/bercait/coach-vision",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "21",
-    "jar": "target/coach-vision-0.1.0.jar",
+    "jar": "target/coach-vision-1.0.0.jar",
     "javafx": true,
     "title": "Coach Vision"
   },
