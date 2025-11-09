@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
 import pt.bemanos.sports.coachvision.services.DynamicTableService;
 import pt.bemanos.sports.coachvision.services.imports.ImportXpsService;
@@ -38,16 +40,22 @@ public class ReportMatchController implements Initializable {
     private ChoiceBox<String> teamsSelect;
     private ObservableList<Map<String, Object>> playersList = FXCollections.emptyObservableList();
 
+    Logger logger = LoggerFactory.getLogger(ReportMatchController.class.getName());
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        logger.info("Initializing ReportMatchController");
+
         teamsSelect.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
+                    logger.info("Selected Team: {}", newValue);
                     this.updateTeamSelected(newValue);
                 });
     }
 
     public void loadFile(ActionEvent actionEvent) {
+        logger.info("Loading File");
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Csv Files", "*.csv"));
 
@@ -55,21 +63,27 @@ public class ReportMatchController implements Initializable {
         File file = fileChooser.showOpenDialog(window);
 
         if (file != null) {
+            logger.info("File Loaded " + file.getAbsolutePath());
             Platform.runLater(() -> {
                 this.updateUI(file.getName());
                 try {
+                    logger.info("Clearing DB");
                     DatabaseFactory.getInstance().getSession().clear();
 
+                    logger.info("Importing Events from File");
                     ImportXpsService importXpsService = new ImportXpsService(file.getAbsolutePath());
                     importXpsService.importEvents();
 
+                    logger.info("Getting Teams");
                     teamsSelect.getItems().addAll(importXpsService.getAllTeams());
                 } catch (IOException e) {
                     //TODO Exception handling
+                    logger.error(e.getMessage());
                     throw new RuntimeException(e);
                 }
             });
         } else {
+            logger.info("No file selected");
             this.updateUI("");
         }
     }

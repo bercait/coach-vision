@@ -28,6 +28,9 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * JavaFX App
@@ -36,6 +39,7 @@ public class ApplicationFX extends Application {
 
     BooleanProperty ready = new SimpleBooleanProperty(false);
     StringProperty errorMessage = new SimpleStringProperty("");
+    Logger logger = Logger.getLogger(ApplicationFX.class.getName());
 
 //    ImportXpsService importXpsService = new ImportXpsService("/Users/tiagobernardes/Downloads/SPSUL x GARRETT.csv");
 //    ImportXpsService importXpsService = new ImportXpsService("/Users/tiagobernardes/Downloads/1ª parte Angola x Visionários.csv");
@@ -55,9 +59,19 @@ public class ApplicationFX extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        Path path = Path.of(System.getProperty("user.home"), ".coachvision");
+
+        try {
+            FileHandler fileHandler = new FileHandler(Path.of(path.toAbsolutePath().toString(), "app.log").toString());
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+            logger.addHandler(fileHandler);
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
 
         final License license;
-        String filePath = Path.of(System.getProperty("user.home"), ".coachvision", "license.bin").toString();
+        String filePath = Path.of(path.toAbsolutePath().toString(), "license.bin").toString();
         try (var reader = new LicenseReader(filePath)) {
             license = reader.read();
         } catch (IOException e) {
@@ -137,19 +151,22 @@ public class ApplicationFX extends Application {
                 return;
             }
 
-            if (!license.isExpired()) {
-                errorMessage.set("License is expired");
-                return;
-            }
+//            if (!license.isExpired()) {
+//                errorMessage.set("License is expired");
+//                return;
+//            }
 
         } catch (NoSuchAlgorithmException | UnknownHostException | SocketException e) {
+            logger.severe(e.getMessage());
             throw new RuntimeException(e);
         }
 
         System.out.println("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
+        logger.info("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
         // Registers a shutdown hook for the Neo4j instance so that it shuts down nicely when the VM exits
         // (even if you "Ctrl-C" the running application).
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Shutting down Neo4j server...");
             DatabaseFactory.getInstance().getSessionFactory().close();
             ServerFactory.getInstance().getManagementService().shutdown();
         }));
@@ -192,6 +209,7 @@ public class ApplicationFX extends Application {
 //
         //importXpsService.importEvents();
 
+        logger.info("Initializing Dynamic Table");
         DynamicTable dynamicTable = new DynamicTable();
         dynamicTable.setName("player_total");
 //        dynamicTable.setCypherMatch("MATCH (g:Game)-[:NEXT_ATTACK]-*(a:Attack)-[:NEXT_EVENT]-+(e:Event)-[]-(p:Player)-[]-(g)-[]-(t:Team) ");
@@ -227,6 +245,8 @@ public class ApplicationFX extends Application {
         DynamicTableRepository dynamicTableRepository = new DynamicTableRepository();
         dynamicTableRepository.save(dynamicTable);
 
+        logger.info("Finished Dynamic Table");
+
 
 //        session.query("CREATE (:DynamicTable {name: \"player_total\", cypherMatch: \"MATCH (g:Game)-[]-(p:Player)\", cypherReturn: \"RETURN p.name as Name\", cypherCall: \"CALL (p)\", Goals: \"MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g)\", Throws: \"MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t)\", Saves: \"MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s)\"})", new HashMap<>(), false);
 
@@ -235,6 +255,7 @@ public class ApplicationFX extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        logger.info("Beginning Start Method");
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
         var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
@@ -248,13 +269,19 @@ public class ApplicationFX extends Application {
             title = errorMessage.get();
         }
 
+        logger.info("Loading Application FXML");
+
         stage.setTitle(title);
         FXMLLoader fxmlLoader = new FXMLLoader(ApplicationFX.class.getResource("/fxml/" + fxml));
         Pane pane = fxmlLoader.load();
 
+        logger.info("Loaded Application FXML");
+
         Platform.runLater(() -> {
             var scene = new Scene(pane, 800, 600, false, antialiasing);
             stage.setScene(scene);
+
+            logger.info("Loaded Application Scene ");
 
             stage.show();
             stage.requestFocus();
@@ -266,6 +293,8 @@ public class ApplicationFX extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+
+        logger.info("Stopping Application FX");
 
         DatabaseFactory.getInstance().getSessionFactory().close();
         ServerFactory.getInstance().getManagementService().shutdown();
