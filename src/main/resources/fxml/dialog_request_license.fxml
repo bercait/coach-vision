@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import atlantafx.base.controls.Spacer?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
@@ -29,7 +28,6 @@
             <Font size="18.0"/>
         </font>
     </Hyperlink>
-    <Spacer VBox.vgrow="ALWAYS"/>
     <Label text="This application will only work with the follwing XPS formula (for now):" wrapText="true">
         <font>
             <Font size="18.0"/>
