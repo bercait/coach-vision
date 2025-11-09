@@ -266,6 +266,7 @@ public class ApplicationFX extends Application {
         try {
             logger.info("Beginning Start Method");
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            logger.info("Loading Antialiasing");
 
             var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
                     ? SceneAntialiasing.BALANCED
@@ -273,6 +274,7 @@ public class ApplicationFX extends Application {
 
             String fxml = "report_totals.fxml";
             String title = "Coach Vision";
+            logger.info("Ready: " + ready.toString());
             if (!ready.get()) {
                 fxml = "dialog_request_license.fxml";
                 title = errorMessage.get();
