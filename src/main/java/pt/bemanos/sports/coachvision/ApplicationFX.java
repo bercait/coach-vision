@@ -74,7 +74,7 @@ public class ApplicationFX extends Application {
         }
 
         logger.info("Starting Licensing");
-        final License license;
+        License license = null;
         String filePath = Path.of(path.toAbsolutePath().toString(), "license.bin").toString();
         logger.info(filePath);
         try (var reader = new LicenseReader(filePath)) {
@@ -82,105 +82,94 @@ public class ApplicationFX extends Application {
         } catch (IOException e) {
             errorMessage.set("License not found");
             logger.warning(e.getMessage());
-            return;
         }
 
-        byte[] key = new byte[]{
-                (byte) 0x52,
-                (byte) 0x53, (byte) 0x41, (byte) 0x2F, (byte) 0x45, (byte) 0x43, (byte) 0x42, (byte) 0x2F, (byte) 0x50,
-                (byte) 0x4B, (byte) 0x43, (byte) 0x53, (byte) 0x31, (byte) 0x50, (byte) 0x61, (byte) 0x64, (byte) 0x64,
-                (byte) 0x69, (byte) 0x6E, (byte) 0x67, (byte) 0x00, (byte) 0x30, (byte) 0x82, (byte) 0x01, (byte) 0xA2,
-                (byte) 0x30, (byte) 0x0D, (byte) 0x06, (byte) 0x09, (byte) 0x2A, (byte) 0x86, (byte) 0x48, (byte) 0x86,
-                (byte) 0xF7, (byte) 0x0D, (byte) 0x01, (byte) 0x01, (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x03,
-                (byte) 0x82, (byte) 0x01, (byte) 0x8F, (byte) 0x00, (byte) 0x30, (byte) 0x82, (byte) 0x01, (byte) 0x8A,
-                (byte) 0x02, (byte) 0x82, (byte) 0x01, (byte) 0x81, (byte) 0x00, (byte) 0xD1, (byte) 0x36, (byte) 0x9C,
-                (byte) 0x72, (byte) 0xC1, (byte) 0xC4, (byte) 0x15, (byte) 0x36, (byte) 0x5B, (byte) 0x2A, (byte) 0x97,
-                (byte) 0x05, (byte) 0x2F, (byte) 0x2E, (byte) 0x80, (byte) 0xBE, (byte) 0x0C, (byte) 0xB5, (byte) 0x26,
-                (byte) 0xBA, (byte) 0x77, (byte) 0xE6, (byte) 0xB3, (byte) 0xA6, (byte) 0xE4, (byte) 0x73, (byte) 0xD9,
-                (byte) 0xB4, (byte) 0x94, (byte) 0x1A, (byte) 0xE2, (byte) 0xC4, (byte) 0xF2, (byte) 0x1E, (byte) 0x77,
-                (byte) 0x36, (byte) 0x8C, (byte) 0x0F, (byte) 0x84, (byte) 0x98, (byte) 0x1C, (byte) 0x8A, (byte) 0xBE,
-                (byte) 0x0C, (byte) 0x42, (byte) 0x26, (byte) 0x82, (byte) 0x50, (byte) 0x74, (byte) 0x6C, (byte) 0xE4,
-                (byte) 0x74, (byte) 0x65, (byte) 0x13, (byte) 0x68, (byte) 0x1D, (byte) 0x67, (byte) 0x20, (byte) 0x86,
-                (byte) 0x7B, (byte) 0x08, (byte) 0xBC, (byte) 0x0B, (byte) 0xA9, (byte) 0x94, (byte) 0x18, (byte) 0xB0,
-                (byte) 0x5F, (byte) 0x78, (byte) 0x3F, (byte) 0xB7, (byte) 0x77, (byte) 0x8E, (byte) 0xE4, (byte) 0x7A,
-                (byte) 0x4A, (byte) 0xCC, (byte) 0x4F, (byte) 0xFA, (byte) 0xC7, (byte) 0xE3, (byte) 0x4C, (byte) 0x1A,
-                (byte) 0xBB, (byte) 0x66, (byte) 0x76, (byte) 0xCD, (byte) 0x63, (byte) 0xA0, (byte) 0xF8, (byte) 0x3C,
-                (byte) 0xCD, (byte) 0xC9, (byte) 0xB4, (byte) 0x46, (byte) 0x64, (byte) 0x72, (byte) 0x88, (byte) 0x22,
-                (byte) 0xA9, (byte) 0x46, (byte) 0x69, (byte) 0x08, (byte) 0x45, (byte) 0x25, (byte) 0xAC, (byte) 0x50,
-                (byte) 0xBA, (byte) 0xEC, (byte) 0xA9, (byte) 0x4B, (byte) 0x27, (byte) 0x5B, (byte) 0xE0, (byte) 0x6C,
-                (byte) 0x64, (byte) 0x30, (byte) 0x85, (byte) 0x3E, (byte) 0xEB, (byte) 0xF6, (byte) 0x0C, (byte) 0x01,
-                (byte) 0x0B, (byte) 0xC1, (byte) 0x20, (byte) 0xA5, (byte) 0xEE, (byte) 0xFA, (byte) 0x37, (byte) 0xA7,
-                (byte) 0xC2, (byte) 0xBB, (byte) 0x3F, (byte) 0xE9, (byte) 0x3B, (byte) 0xE1, (byte) 0x4C, (byte) 0xB6,
-                (byte) 0x05, (byte) 0x42, (byte) 0x46, (byte) 0x1B, (byte) 0x2C, (byte) 0x8B, (byte) 0x83, (byte) 0x43,
-                (byte) 0x50, (byte) 0x09, (byte) 0x4B, (byte) 0x99, (byte) 0x09, (byte) 0x02, (byte) 0xC5, (byte) 0xBF,
-                (byte) 0xB9, (byte) 0x3C, (byte) 0xE6, (byte) 0x3B, (byte) 0x2A, (byte) 0xF6, (byte) 0x3D, (byte) 0x1C,
-                (byte) 0x46, (byte) 0xF3, (byte) 0xB4, (byte) 0xCF, (byte) 0x7B, (byte) 0x89, (byte) 0x8B, (byte) 0x6D,
-                (byte) 0x73, (byte) 0x4D, (byte) 0x23, (byte) 0x0B, (byte) 0xA2, (byte) 0x2A, (byte) 0x12, (byte) 0x5D,
-                (byte) 0x15, (byte) 0x17, (byte) 0xDB, (byte) 0x87, (byte) 0x62, (byte) 0x6F, (byte) 0xDA, (byte) 0xB1,
-                (byte) 0xA0, (byte) 0x53, (byte) 0x44, (byte) 0xFE, (byte) 0xC2, (byte) 0x93, (byte) 0x24, (byte) 0xB7,
-                (byte) 0x32, (byte) 0xBD, (byte) 0x25, (byte) 0x2C, (byte) 0x5C, (byte) 0xC1, (byte) 0x14, (byte) 0xB0,
-                (byte) 0xA9, (byte) 0x48, (byte) 0xDC, (byte) 0xBE, (byte) 0x43, (byte) 0x52, (byte) 0x4D, (byte) 0x05,
-                (byte) 0x75, (byte) 0xCB, (byte) 0x97, (byte) 0x2B, (byte) 0x34, (byte) 0x41, (byte) 0x8E, (byte) 0xC8,
-                (byte) 0xB3, (byte) 0x86, (byte) 0x80, (byte) 0x7C, (byte) 0xB0, (byte) 0xDE, (byte) 0x8F, (byte) 0xA4,
-                (byte) 0xBD, (byte) 0x77, (byte) 0xDA, (byte) 0x6A, (byte) 0x1A, (byte) 0x39, (byte) 0x94, (byte) 0xCC,
-                (byte) 0xF4, (byte) 0xF6, (byte) 0x1E, (byte) 0x40, (byte) 0xB0, (byte) 0x0F, (byte) 0x09, (byte) 0x47,
-                (byte) 0x73, (byte) 0xEE, (byte) 0x7E, (byte) 0x75, (byte) 0xAE, (byte) 0xBB, (byte) 0x61, (byte) 0x0C,
-                (byte) 0xDF, (byte) 0x69, (byte) 0x22, (byte) 0xA4, (byte) 0xB3, (byte) 0xE5, (byte) 0xC7, (byte) 0xCE,
-                (byte) 0x20, (byte) 0x2B, (byte) 0xC5, (byte) 0x9D, (byte) 0x47, (byte) 0x90, (byte) 0xBB, (byte) 0x76,
-                (byte) 0x9F, (byte) 0xB1, (byte) 0xD4, (byte) 0x17, (byte) 0xC3, (byte) 0x10, (byte) 0xB8, (byte) 0xEB,
-                (byte) 0x15, (byte) 0xC7, (byte) 0xD0, (byte) 0xF4, (byte) 0x55, (byte) 0xB6, (byte) 0x2D, (byte) 0x26,
-                (byte) 0x18, (byte) 0x3B, (byte) 0xF6, (byte) 0x86, (byte) 0xCE, (byte) 0x1C, (byte) 0x15, (byte) 0xAD,
-                (byte) 0x32, (byte) 0xE0, (byte) 0x5D, (byte) 0x26, (byte) 0x61, (byte) 0x72, (byte) 0xE9, (byte) 0xB1,
-                (byte) 0xB5, (byte) 0x4C, (byte) 0x33, (byte) 0x5C, (byte) 0xF1, (byte) 0xDC, (byte) 0x36, (byte) 0xC6,
-                (byte) 0xB6, (byte) 0x1A, (byte) 0xF7, (byte) 0xBA, (byte) 0xC6, (byte) 0xC6, (byte) 0x4B, (byte) 0xEB,
-                (byte) 0x93, (byte) 0xA4, (byte) 0x45, (byte) 0xB1, (byte) 0xBB, (byte) 0x08, (byte) 0x04, (byte) 0xCA,
-                (byte) 0x53, (byte) 0xB8, (byte) 0x96, (byte) 0xDE, (byte) 0xCE, (byte) 0x1B, (byte) 0xF3, (byte) 0x4D,
-                (byte) 0x88, (byte) 0x06, (byte) 0xE6, (byte) 0xC7, (byte) 0x7D, (byte) 0xA8, (byte) 0x48, (byte) 0x53,
-                (byte) 0xE3, (byte) 0x7A, (byte) 0xB4, (byte) 0xD4, (byte) 0xA1, (byte) 0x28, (byte) 0xA5, (byte) 0x52,
-                (byte) 0xC2, (byte) 0x92, (byte) 0x0F, (byte) 0x8E, (byte) 0xC4, (byte) 0xBF, (byte) 0x27, (byte) 0x4C,
-                (byte) 0xB8, (byte) 0x1E, (byte) 0x6B, (byte) 0xEF, (byte) 0xB7, (byte) 0xE4, (byte) 0x5F, (byte) 0xC9,
-                (byte) 0xFE, (byte) 0x0F, (byte) 0x30, (byte) 0x72, (byte) 0x76, (byte) 0x58, (byte) 0xBC, (byte) 0x15,
-                (byte) 0x79, (byte) 0x01, (byte) 0xE6, (byte) 0x3F, (byte) 0xB4, (byte) 0xB4, (byte) 0x36, (byte) 0x62,
-                (byte) 0xC7, (byte) 0xD8, (byte) 0x60, (byte) 0xC6, (byte) 0x11, (byte) 0x02, (byte) 0x03, (byte) 0x01,
-                (byte) 0x00, (byte) 0x01,
-        };
+        if (license != null) {
+            byte[] key = new byte[]{
+                    (byte) 0x52,
+                    (byte) 0x53, (byte) 0x41, (byte) 0x2F, (byte) 0x45, (byte) 0x43, (byte) 0x42, (byte) 0x2F, (byte) 0x50,
+                    (byte) 0x4B, (byte) 0x43, (byte) 0x53, (byte) 0x31, (byte) 0x50, (byte) 0x61, (byte) 0x64, (byte) 0x64,
+                    (byte) 0x69, (byte) 0x6E, (byte) 0x67, (byte) 0x00, (byte) 0x30, (byte) 0x82, (byte) 0x01, (byte) 0xA2,
+                    (byte) 0x30, (byte) 0x0D, (byte) 0x06, (byte) 0x09, (byte) 0x2A, (byte) 0x86, (byte) 0x48, (byte) 0x86,
+                    (byte) 0xF7, (byte) 0x0D, (byte) 0x01, (byte) 0x01, (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x03,
+                    (byte) 0x82, (byte) 0x01, (byte) 0x8F, (byte) 0x00, (byte) 0x30, (byte) 0x82, (byte) 0x01, (byte) 0x8A,
+                    (byte) 0x02, (byte) 0x82, (byte) 0x01, (byte) 0x81, (byte) 0x00, (byte) 0xD1, (byte) 0x36, (byte) 0x9C,
+                    (byte) 0x72, (byte) 0xC1, (byte) 0xC4, (byte) 0x15, (byte) 0x36, (byte) 0x5B, (byte) 0x2A, (byte) 0x97,
+                    (byte) 0x05, (byte) 0x2F, (byte) 0x2E, (byte) 0x80, (byte) 0xBE, (byte) 0x0C, (byte) 0xB5, (byte) 0x26,
+                    (byte) 0xBA, (byte) 0x77, (byte) 0xE6, (byte) 0xB3, (byte) 0xA6, (byte) 0xE4, (byte) 0x73, (byte) 0xD9,
+                    (byte) 0xB4, (byte) 0x94, (byte) 0x1A, (byte) 0xE2, (byte) 0xC4, (byte) 0xF2, (byte) 0x1E, (byte) 0x77,
+                    (byte) 0x36, (byte) 0x8C, (byte) 0x0F, (byte) 0x84, (byte) 0x98, (byte) 0x1C, (byte) 0x8A, (byte) 0xBE,
+                    (byte) 0x0C, (byte) 0x42, (byte) 0x26, (byte) 0x82, (byte) 0x50, (byte) 0x74, (byte) 0x6C, (byte) 0xE4,
+                    (byte) 0x74, (byte) 0x65, (byte) 0x13, (byte) 0x68, (byte) 0x1D, (byte) 0x67, (byte) 0x20, (byte) 0x86,
+                    (byte) 0x7B, (byte) 0x08, (byte) 0xBC, (byte) 0x0B, (byte) 0xA9, (byte) 0x94, (byte) 0x18, (byte) 0xB0,
+                    (byte) 0x5F, (byte) 0x78, (byte) 0x3F, (byte) 0xB7, (byte) 0x77, (byte) 0x8E, (byte) 0xE4, (byte) 0x7A,
+                    (byte) 0x4A, (byte) 0xCC, (byte) 0x4F, (byte) 0xFA, (byte) 0xC7, (byte) 0xE3, (byte) 0x4C, (byte) 0x1A,
+                    (byte) 0xBB, (byte) 0x66, (byte) 0x76, (byte) 0xCD, (byte) 0x63, (byte) 0xA0, (byte) 0xF8, (byte) 0x3C,
+                    (byte) 0xCD, (byte) 0xC9, (byte) 0xB4, (byte) 0x46, (byte) 0x64, (byte) 0x72, (byte) 0x88, (byte) 0x22,
+                    (byte) 0xA9, (byte) 0x46, (byte) 0x69, (byte) 0x08, (byte) 0x45, (byte) 0x25, (byte) 0xAC, (byte) 0x50,
+                    (byte) 0xBA, (byte) 0xEC, (byte) 0xA9, (byte) 0x4B, (byte) 0x27, (byte) 0x5B, (byte) 0xE0, (byte) 0x6C,
+                    (byte) 0x64, (byte) 0x30, (byte) 0x85, (byte) 0x3E, (byte) 0xEB, (byte) 0xF6, (byte) 0x0C, (byte) 0x01,
+                    (byte) 0x0B, (byte) 0xC1, (byte) 0x20, (byte) 0xA5, (byte) 0xEE, (byte) 0xFA, (byte) 0x37, (byte) 0xA7,
+                    (byte) 0xC2, (byte) 0xBB, (byte) 0x3F, (byte) 0xE9, (byte) 0x3B, (byte) 0xE1, (byte) 0x4C, (byte) 0xB6,
+                    (byte) 0x05, (byte) 0x42, (byte) 0x46, (byte) 0x1B, (byte) 0x2C, (byte) 0x8B, (byte) 0x83, (byte) 0x43,
+                    (byte) 0x50, (byte) 0x09, (byte) 0x4B, (byte) 0x99, (byte) 0x09, (byte) 0x02, (byte) 0xC5, (byte) 0xBF,
+                    (byte) 0xB9, (byte) 0x3C, (byte) 0xE6, (byte) 0x3B, (byte) 0x2A, (byte) 0xF6, (byte) 0x3D, (byte) 0x1C,
+                    (byte) 0x46, (byte) 0xF3, (byte) 0xB4, (byte) 0xCF, (byte) 0x7B, (byte) 0x89, (byte) 0x8B, (byte) 0x6D,
+                    (byte) 0x73, (byte) 0x4D, (byte) 0x23, (byte) 0x0B, (byte) 0xA2, (byte) 0x2A, (byte) 0x12, (byte) 0x5D,
+                    (byte) 0x15, (byte) 0x17, (byte) 0xDB, (byte) 0x87, (byte) 0x62, (byte) 0x6F, (byte) 0xDA, (byte) 0xB1,
+                    (byte) 0xA0, (byte) 0x53, (byte) 0x44, (byte) 0xFE, (byte) 0xC2, (byte) 0x93, (byte) 0x24, (byte) 0xB7,
+                    (byte) 0x32, (byte) 0xBD, (byte) 0x25, (byte) 0x2C, (byte) 0x5C, (byte) 0xC1, (byte) 0x14, (byte) 0xB0,
+                    (byte) 0xA9, (byte) 0x48, (byte) 0xDC, (byte) 0xBE, (byte) 0x43, (byte) 0x52, (byte) 0x4D, (byte) 0x05,
+                    (byte) 0x75, (byte) 0xCB, (byte) 0x97, (byte) 0x2B, (byte) 0x34, (byte) 0x41, (byte) 0x8E, (byte) 0xC8,
+                    (byte) 0xB3, (byte) 0x86, (byte) 0x80, (byte) 0x7C, (byte) 0xB0, (byte) 0xDE, (byte) 0x8F, (byte) 0xA4,
+                    (byte) 0xBD, (byte) 0x77, (byte) 0xDA, (byte) 0x6A, (byte) 0x1A, (byte) 0x39, (byte) 0x94, (byte) 0xCC,
+                    (byte) 0xF4, (byte) 0xF6, (byte) 0x1E, (byte) 0x40, (byte) 0xB0, (byte) 0x0F, (byte) 0x09, (byte) 0x47,
+                    (byte) 0x73, (byte) 0xEE, (byte) 0x7E, (byte) 0x75, (byte) 0xAE, (byte) 0xBB, (byte) 0x61, (byte) 0x0C,
+                    (byte) 0xDF, (byte) 0x69, (byte) 0x22, (byte) 0xA4, (byte) 0xB3, (byte) 0xE5, (byte) 0xC7, (byte) 0xCE,
+                    (byte) 0x20, (byte) 0x2B, (byte) 0xC5, (byte) 0x9D, (byte) 0x47, (byte) 0x90, (byte) 0xBB, (byte) 0x76,
+                    (byte) 0x9F, (byte) 0xB1, (byte) 0xD4, (byte) 0x17, (byte) 0xC3, (byte) 0x10, (byte) 0xB8, (byte) 0xEB,
+                    (byte) 0x15, (byte) 0xC7, (byte) 0xD0, (byte) 0xF4, (byte) 0x55, (byte) 0xB6, (byte) 0x2D, (byte) 0x26,
+                    (byte) 0x18, (byte) 0x3B, (byte) 0xF6, (byte) 0x86, (byte) 0xCE, (byte) 0x1C, (byte) 0x15, (byte) 0xAD,
+                    (byte) 0x32, (byte) 0xE0, (byte) 0x5D, (byte) 0x26, (byte) 0x61, (byte) 0x72, (byte) 0xE9, (byte) 0xB1,
+                    (byte) 0xB5, (byte) 0x4C, (byte) 0x33, (byte) 0x5C, (byte) 0xF1, (byte) 0xDC, (byte) 0x36, (byte) 0xC6,
+                    (byte) 0xB6, (byte) 0x1A, (byte) 0xF7, (byte) 0xBA, (byte) 0xC6, (byte) 0xC6, (byte) 0x4B, (byte) 0xEB,
+                    (byte) 0x93, (byte) 0xA4, (byte) 0x45, (byte) 0xB1, (byte) 0xBB, (byte) 0x08, (byte) 0x04, (byte) 0xCA,
+                    (byte) 0x53, (byte) 0xB8, (byte) 0x96, (byte) 0xDE, (byte) 0xCE, (byte) 0x1B, (byte) 0xF3, (byte) 0x4D,
+                    (byte) 0x88, (byte) 0x06, (byte) 0xE6, (byte) 0xC7, (byte) 0x7D, (byte) 0xA8, (byte) 0x48, (byte) 0x53,
+                    (byte) 0xE3, (byte) 0x7A, (byte) 0xB4, (byte) 0xD4, (byte) 0xA1, (byte) 0x28, (byte) 0xA5, (byte) 0x52,
+                    (byte) 0xC2, (byte) 0x92, (byte) 0x0F, (byte) 0x8E, (byte) 0xC4, (byte) 0xBF, (byte) 0x27, (byte) 0x4C,
+                    (byte) 0xB8, (byte) 0x1E, (byte) 0x6B, (byte) 0xEF, (byte) 0xB7, (byte) 0xE4, (byte) 0x5F, (byte) 0xC9,
+                    (byte) 0xFE, (byte) 0x0F, (byte) 0x30, (byte) 0x72, (byte) 0x76, (byte) 0x58, (byte) 0xBC, (byte) 0x15,
+                    (byte) 0x79, (byte) 0x01, (byte) 0xE6, (byte) 0x3F, (byte) 0xB4, (byte) 0xB4, (byte) 0x36, (byte) 0x62,
+                    (byte) 0xC7, (byte) 0xD8, (byte) 0x60, (byte) 0xC6, (byte) 0x11, (byte) 0x02, (byte) 0x03, (byte) 0x01,
+                    (byte) 0x00, (byte) 0x01,
+            };
 
 
-        try {
-            logger.info(license.getLicenseId().toString());
-            logger.info(new HardwareBinder().getMachineId().toString());
-            logger.info(Boolean.toString(license.isOK(key)));
+            try {
+                logger.info(license.getLicenseId().toString());
+                logger.info(new HardwareBinder().getMachineId().toString());
+                logger.info(Boolean.toString(license.isOK(key)));
 
-            if (!license.isOK(key)) {
-                errorMessage.set("License not valid");
-                logger.warning("License not valid");
-                return;
-            }
-
-            if (!license.getLicenseId().equals(new HardwareBinder().getMachineId())) {
-                errorMessage.set("License not valid for this machine");
-                logger.warning("License not valid for this machine");
-                return;
-            }
-
-//            if (!license.isExpired()) {
+                if (!license.isOK(key)) {
+                    errorMessage.set("License not valid");
+                    logger.warning("License not valid");
+                } else if (!license.getLicenseId().equals(new HardwareBinder().getMachineId())) {
+                    errorMessage.set("License not valid for this machine");
+                    logger.warning("License not valid for this machine");
+//                } else if (!license.isExpired()) {
 //                errorMessage.set("License is expired");
 //                return;
 //            }
-
-        } catch (NoSuchAlgorithmException | UnknownHostException | SocketException e) {
-            logger.severe(e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        logger.info("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
-        // Registers a shutdown hook for the Neo4j instance so that it shuts down nicely when the VM exits
-        // (even if you "Ctrl-C" the running application).
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            logger.info("Shutting down Neo4j server...");
-            DatabaseFactory.getInstance().getSessionFactory().close();
-            ServerFactory.getInstance().getManagementService().shutdown();
-        }));
+                } else {
+                    logger.info("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
+                    // Registers a shutdown hook for the Neo4j instance so that it shuts down nicely when the VM exits
+                    // (even if you "Ctrl-C" the running application).
+                    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                        logger.info("Shutting down Neo4j server...");
+                        DatabaseFactory.getInstance().getSessionFactory().close();
+                        ServerFactory.getInstance().getManagementService().shutdown();
+                    }));
 
 //        Player homePlayer = new Player();
 //        homePlayer.setName("Jogador Casa");
@@ -218,13 +207,13 @@ public class ApplicationFX extends Application {
 //                "(n3)-[:ACTION]->(n5:Player {name: \"Jogador Casa\"})<-[:HOME_PLAYER]-(n0)-[:AWAY_TEAM]->(:Team),\n" +
 //                "(n10)-[:ACTION]->(n5)", new HashMap<>(), false);
 //
-        //importXpsService.importEvents();
+                    //importXpsService.importEvents();
 
-        logger.info("Initializing Dynamic Table");
-        DynamicTable dynamicTable = new DynamicTable();
-        dynamicTable.setName("player_total");
+                    logger.info("Initializing Dynamic Table");
+                    DynamicTable dynamicTable = new DynamicTable();
+                    dynamicTable.setName("player_total");
 //        dynamicTable.setCypherMatch("MATCH (g:Game)-[:NEXT_ATTACK]-*(a:Attack)-[:NEXT_EVENT]-+(e:Event)-[]-(p:Player)-[]-(g)-[]-(t:Team) ");
-        dynamicTable.setCypherMatch("""
+                    dynamicTable.setCypherMatch("""
                 CALL () {
                 MATCH (g:Game)-[:NEXT_ATTACK]-*(a:Attack)-[:NEXT_EVENT]-*(e:Event)-[]-(p:Player)-[:AWAY_PLAYER]-(g)-[:AWAY_TEAM]-(t:Team {name:$teamName})
                 RETURN *
@@ -233,7 +222,7 @@ public class ApplicationFX extends Application {
                 RETURN *
                 }
                 """);
-        dynamicTable.setCypherReturn("""
+                    dynamicTable.setCypherReturn("""
                 RETURN DISTINCT p.name AS Name,
                 (Throws + Turnover) AS Actions,
                 Goals,
@@ -242,26 +231,33 @@ public class ApplicationFX extends Application {
                 pt.bemanos.sports.coachvision.database.procedure.percentage(Goals,Throws) AS PT,
                 pt.bemanos.sports.coachvision.database.procedure.percentage(Goals,(Throws + Turnover)) AS PA
                 """);
-        //dynamicTable.setCypherReturn("RETURN DISTINCT p.name as Name");
-        dynamicTable.setCypherCall("CALL (p) ");
-        Map<String, String> map = new HashMap<>();
-        map.put("Throws", "MATCH (p)<-[:ACTOR]-(t:Throw) RETURN count(t)");
-        map.put("Goals", "MATCH (p)<-[:ACTOR]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g)");
-        map.put("Saves", "MATCH (p)<-[:ACTOR]-(t:Throw)-[:NEXT_EVENT]-(s:Save) RETURN count(s)");
+                    //dynamicTable.setCypherReturn("RETURN DISTINCT p.name as Name");
+                    dynamicTable.setCypherCall("CALL (p) ");
+                    Map<String, String> map = new HashMap<>();
+                    map.put("Throws", "MATCH (p)<-[:ACTOR]-(t:Throw) RETURN count(t)");
+                    map.put("Goals", "MATCH (p)<-[:ACTOR]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g)");
+                    map.put("Saves", "MATCH (p)<-[:ACTOR]-(t:Throw)-[:NEXT_EVENT]-(s:Save) RETURN count(s)");
 //        map.put("Assists", "MATCH (p)<-[:ACTOR]-(a:Assist) RETURN count(a)");
-        map.put("Turnover", "MATCH (p)<-[:ACTOR]-(t:Turnover) RETURN count(t)");
+                    map.put("Turnover", "MATCH (p)<-[:ACTOR]-(t:Turnover) RETURN count(t)");
 //        map.put("Teste", "MATCH (p)<-[:ACTOR]-(t:Teste) RETURN count(t)");
-        dynamicTable.setProperties(map);
+                    dynamicTable.setProperties(map);
 
-        DynamicTableRepository dynamicTableRepository = new DynamicTableRepository();
-        dynamicTableRepository.save(dynamicTable);
+                    DynamicTableRepository dynamicTableRepository = new DynamicTableRepository();
+                    dynamicTableRepository.save(dynamicTable);
 
-        logger.info("Finished Dynamic Table");
+                    logger.info("Finished Dynamic Table");
 
 
 //        session.query("CREATE (:DynamicTable {name: \"player_total\", cypherMatch: \"MATCH (g:Game)-[]-(p:Player)\", cypherReturn: \"RETURN p.name as Name\", cypherCall: \"CALL (p)\", Goals: \"MATCH (p)<-[:ACTION]-(t:Throw)-[:NEXT_EVENT]-(g:Goal) RETURN count(g)\", Throws: \"MATCH (p)<-[:ACTION]-(t:Throw) RETURN count(t)\", Saves: \"MATCH (p)<-[:GOALKEEPER]-(s:Save) RETURN count(s)\"})", new HashMap<>(), false);
 
-        ready.set(true);
+                    ready.set(true);
+                }
+
+            } catch (NoSuchAlgorithmException | UnknownHostException | SocketException e) {
+                logger.severe(e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
