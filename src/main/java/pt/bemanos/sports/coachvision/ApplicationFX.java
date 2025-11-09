@@ -267,6 +267,7 @@ public class ApplicationFX extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         try {
+            stage.show();
             logger.info("Beginning Start Method");
             //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             logger.info("Loading Antialiasing");
@@ -282,7 +283,7 @@ public class ApplicationFX extends Application {
                 fxml = "dialog_request_license.fxml";
                 title = errorMessage.get();
             }
-
+            logger.info(fxml);
             logger.info("Loading Application FXML");
 
             stage.setTitle(title);
