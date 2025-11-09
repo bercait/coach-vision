@@ -148,6 +148,10 @@ public class ApplicationFX extends Application {
 
 
         try {
+            logger.info(license.getLicenseId().toString());
+            logger.info(new HardwareBinder().getMachineId().toString());
+            logger.info(Boolean.toString(license.isOK(key)));
+
             if (!license.isOK(key)) {
                 errorMessage.set("License not valid");
                 logger.warning("License not valid");
