@@ -291,8 +291,8 @@ public class ApplicationFX extends Application {
 
             logger.info("Loaded Application FXML");
 
-            Platform.runLater(() -> {
-                try {
+//            Platform.runLater(() -> {
+//                try {
                     var scene = new Scene(pane, 800, 600, false, antialiasing);
                     stage.setScene(scene);
 
@@ -302,10 +302,10 @@ public class ApplicationFX extends Application {
                     stage.requestFocus();
 
                     //ScenicView.show(scene);
-                } catch (Exception e) {
-                    logger.severe(e.getMessage());
-                }
-            });
+//                } catch (Exception e) {
+//                    logger.severe(e.getMessage());
+//                }
+//            });
         } catch (Exception e) {
             logger.severe(e.getMessage());
             throw new RuntimeException(e);
@@ -314,7 +314,7 @@ public class ApplicationFX extends Application {
 
     @Override
     public void stop() throws Exception {
-        super.stop();
+        //super.stop();
 
         logger.info("Stopping Application FX");
 

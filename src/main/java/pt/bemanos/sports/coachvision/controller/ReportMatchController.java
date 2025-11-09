@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.bemanos.sports.coachvision.ApplicationFX;
 import pt.bemanos.sports.coachvision.database.DatabaseFactory;
 import pt.bemanos.sports.coachvision.services.DynamicTableService;
 import pt.bemanos.sports.coachvision.services.imports.ImportXpsService;
@@ -40,7 +41,7 @@ public class ReportMatchController implements Initializable {
     private ChoiceBox<String> teamsSelect;
     private ObservableList<Map<String, Object>> playersList = FXCollections.emptyObservableList();
 
-    Logger logger = LoggerFactory.getLogger(ReportMatchController.class.getName());
+    Logger logger = LoggerFactory.getLogger(ApplicationFX.class.getName());
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
