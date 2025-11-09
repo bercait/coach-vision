@@ -49,6 +49,8 @@ public class ApplicationFX extends Application {
 
     public static void main(String[] args) {
         System.setProperty("javafx.preloader", SplashScreen.class.getName());
+        Logger logger = Logger.getLogger(ApplicationFX.class.getName());
+        logger.info("Starting Main ");
         launch();
     }
 
@@ -66,16 +68,21 @@ public class ApplicationFX extends Application {
             SimpleFormatter formatter = new SimpleFormatter();
             fileHandler.setFormatter(formatter);
             logger.addHandler(fileHandler);
+
+            logger.info("Log file opened");
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
 
+        logger.info("Starting Licensing");
         final License license;
         String filePath = Path.of(path.toAbsolutePath().toString(), "license.bin").toString();
+        logger.info(filePath);
         try (var reader = new LicenseReader(filePath)) {
             license = reader.read();
         } catch (IOException e) {
             errorMessage.set("License not found");
+            logger.warning(e.getMessage());
             return;
         }
 
@@ -143,11 +150,13 @@ public class ApplicationFX extends Application {
         try {
             if (!license.isOK(key)) {
                 errorMessage.set("License not valid");
+                logger.warning("License not valid");
                 return;
             }
 
             if (!license.getLicenseId().equals(new HardwareBinder().getMachineId())) {
                 errorMessage.set("License not valid for this machine");
+                logger.warning("License not valid for this machine");
                 return;
             }
 
@@ -161,7 +170,6 @@ public class ApplicationFX extends Application {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
         logger.info("Neo4j server started with database: " + ServerFactory.getInstance().getGraphDatabase().databaseName());
         // Registers a shutdown hook for the Neo4j instance so that it shuts down nicely when the VM exits
         // (even if you "Ctrl-C" the running application).
