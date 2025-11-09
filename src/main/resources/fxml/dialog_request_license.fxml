@@ -3,7 +3,6 @@
 <?import atlantafx.base.controls.Spacer?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -43,7 +42,7 @@
         <VBox.margin>
             <Insets bottom="25.0" left="25.0"/>
         </VBox.margin>
-        <Image url="@../formula.jpg"/>
+        <!--<Image url="@../formula.jpg"/>-->
     </ImageView>
     <Label text="Machine ID (Copy this value)" wrapText="true">
         <font>

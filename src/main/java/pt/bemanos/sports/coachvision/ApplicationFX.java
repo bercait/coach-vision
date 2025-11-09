@@ -311,7 +311,7 @@ public class ApplicationFX extends Application {
 
     @Override
     public void stop() throws Exception {
-        //super.stop();
+        super.stop();
 
         logger.info("Stopping Application FX");
 
