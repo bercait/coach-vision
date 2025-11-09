@@ -255,39 +255,48 @@ public class ApplicationFX extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        logger.info("Beginning Start Method");
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        try {
+            logger.info("Beginning Start Method");
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
-        var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
-                ? SceneAntialiasing.BALANCED
-                : SceneAntialiasing.DISABLED;
+            var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
+                    ? SceneAntialiasing.BALANCED
+                    : SceneAntialiasing.DISABLED;
 
-        String fxml = "report_totals.fxml";
-        String title = "Coach Vision";
-        if (!ready.get()) {
-            fxml = "dialog_request_license.fxml";
-            title = errorMessage.get();
+            String fxml = "report_totals.fxml";
+            String title = "Coach Vision";
+            if (!ready.get()) {
+                fxml = "dialog_request_license.fxml";
+                title = errorMessage.get();
+            }
+
+            logger.info("Loading Application FXML");
+
+            stage.setTitle(title);
+            FXMLLoader fxmlLoader = new FXMLLoader(ApplicationFX.class.getResource("/fxml/" + fxml));
+            Pane pane = fxmlLoader.load();
+
+            logger.info("Loaded Application FXML");
+
+            Platform.runLater(() -> {
+                try {
+                    var scene = new Scene(pane, 800, 600, false, antialiasing);
+                    stage.setScene(scene);
+
+                    logger.info("Loaded Application Scene ");
+
+                    stage.show();
+                    stage.requestFocus();
+
+                    //ScenicView.show(scene);
+                } catch (Exception e) {
+                    logger.severe(e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            throw new RuntimeException(e);
         }
-
-        logger.info("Loading Application FXML");
-
-        stage.setTitle(title);
-        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationFX.class.getResource("/fxml/" + fxml));
-        Pane pane = fxmlLoader.load();
-
-        logger.info("Loaded Application FXML");
-
-        Platform.runLater(() -> {
-            var scene = new Scene(pane, 800, 600, false, antialiasing);
-            stage.setScene(scene);
-
-            logger.info("Loaded Application Scene ");
-
-            stage.show();
-            stage.requestFocus();
-
-            //ScenicView.show(scene);
-        });
     }
 
     @Override
