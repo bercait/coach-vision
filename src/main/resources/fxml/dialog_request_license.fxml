@@ -19,7 +19,16 @@
             </font>
         </Label>
     </HBox>
-    <Hyperlink alignment="CENTER" contentDisplay="CENTER" onAction="#openBrowser"
+    <!--    <Hyperlink alignment="CENTER" contentDisplay="CENTER" onAction="#openBrowser"-->
+    <!--               text="https://forms.gle/RZKnvSKoCF9imjZM7">-->
+    <!--        <VBox.margin>-->
+    <!--            <Insets left="125.0"/>-->
+    <!--        </VBox.margin>-->
+    <!--        <font>-->
+    <!--            <Font size="18.0"/>-->
+    <!--        </font>-->
+    <!--    </Hyperlink>    -->
+    <Label alignment="CENTER" contentDisplay="CENTER"
                text="https://forms.gle/RZKnvSKoCF9imjZM7">
         <VBox.margin>
             <Insets left="125.0"/>
@@ -27,7 +36,7 @@
         <font>
             <Font size="18.0"/>
         </font>
-    </Hyperlink>
+    </Label>
     <Label text="This application will only work with the follwing XPS formula (for now):" wrapText="true">
         <font>
             <Font size="18.0"/>
