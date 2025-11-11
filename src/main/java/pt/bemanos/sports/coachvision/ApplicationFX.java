@@ -1,6 +1,5 @@
 package pt.bemanos.sports.coachvision;
 
-import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
@@ -266,7 +265,7 @@ public class ApplicationFX extends Application {
         try {
             stage.show();
             logger.info("Beginning Start Method");
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             logger.info("Loading Antialiasing");
 
             var antialiasing = Platform.isSupported(ConditionalFeature.SCENE3D)
