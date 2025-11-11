@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import atlantafx.base.controls.Spacer?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -19,16 +21,7 @@
             </font>
         </Label>
     </HBox>
-    <!--    <Hyperlink alignment="CENTER" contentDisplay="CENTER" onAction="#openBrowser"-->
-    <!--               text="https://forms.gle/RZKnvSKoCF9imjZM7">-->
-    <!--        <VBox.margin>-->
-    <!--            <Insets left="125.0"/>-->
-    <!--        </VBox.margin>-->
-    <!--        <font>-->
-    <!--            <Font size="18.0"/>-->
-    <!--        </font>-->
-    <!--    </Hyperlink>    -->
-    <Label alignment="CENTER" contentDisplay="CENTER"
+    <Hyperlink alignment="CENTER" contentDisplay="CENTER" onAction="#openBrowser"
                text="https://forms.gle/RZKnvSKoCF9imjZM7">
         <VBox.margin>
             <Insets left="125.0"/>
@@ -36,7 +29,8 @@
         <font>
             <Font size="18.0"/>
         </font>
-    </Label>
+    </Hyperlink>
+    <Spacer VBox.vgrow="ALWAYS"/>
     <Label text="This application will only work with the follwing XPS formula (for now):" wrapText="true">
         <font>
             <Font size="18.0"/>
@@ -49,7 +43,7 @@
         <VBox.margin>
             <Insets bottom="25.0" left="25.0"/>
         </VBox.margin>
-        <!--<Image url="@../formula.jpg"/>-->
+        <Image url="@../formula.jpg"/>
     </ImageView>
     <Label text="Machine ID (Copy this value)" wrapText="true">
         <font>
